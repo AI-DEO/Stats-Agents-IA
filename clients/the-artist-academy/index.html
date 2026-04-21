@@ -187,4 +187,71 @@ async function loadDashboard() {
         labels: MONTHS,
         datasets: [
           { label: '2025', data: arr2025, backgroundColor: TURQUOISE, borderRadius: 2, barPercentage: 0.8, categoryPercentage: 0.7 },
-          { label: '2026', data: arr2026, backgroundCol
+          { label: '2026', data: arr2026, backgroundColor: ORANGE, borderRadius: 2, barPercentage: 0.8, categoryPercentage: 0.7 }
+        ]
+      },
+      options: baseOpts(yLabel, isMoney)
+    });
+  }
+
+  function yearChart(id, v2025, v2026, yLabel, isMoney) {
+    new Chart(document.getElementById(id), {
+      type: 'bar',
+      data: {
+        labels: ['2025', '2026'],
+        datasets: [{ data: [v2025, v2026], backgroundColor: [TURQUOISE, ORANGE], borderRadius: 2, barPercentage: 0.5 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: {display:false}, tooltip: { backgroundColor: DARK, padding: 10, cornerRadius: 6 } },
+        scales: {
+          x: { ticks:{font:{size:12}, color:'#5f5e5a'}, grid:{display:false}, border:{color:'#e5e4dd'} },
+          y: {
+            beginAtZero: true,
+            title: {display:true, text: yLabel, font:{size:11}, color:'#888780'},
+            ticks: { font:{size:11}, color:'#888780', callback: (v) => isMoney ? '$' + v.toFixed(2) : v },
+            grid: {color:'#f0efe8'}, border:{display:false}
+          }
+        }
+      }
+    });
+  }
+
+  barChart('chart_interactions', d2025.interactions, d2026.interactions, 'Total interactions', false);
+  barChart('chart_users', d2025.unique_users, d2026.unique_users, 'Utilisateurs uniques', false);
+  barChart('chart_messages', d2025.messages, d2026.messages, 'Total messages', false);
+  barChart('chart_cost', d2025.cost_usd, d2026.cost_usd, 'Coût total ($)', true);
+
+  yearChart('chart_year_interactions', sum(d2025.interactions), sum(d2026.interactions), 'Total interactions', false);
+  yearChart('chart_year_users', sum(d2025.unique_users), sum(d2026.unique_users), 'Utilisateurs uniques', false);
+  yearChart('chart_year_messages', sum(d2025.messages), sum(d2026.messages), 'Total messages', false);
+  yearChart('chart_year_cost', Math.round(sum(d2025.cost_usd)*100)/100, Math.round(sum(d2026.cost_usd)*100)/100, 'Coût total ($)', true);
+}
+
+function showDashboard() {
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  loadDashboard();
+}
+
+function tryLogin() {
+  const pwd = document.getElementById('pwd').value;
+  if (pwd === PASSWORD) {
+    localStorage.setItem(STORAGE_KEY, "ok");
+    showDashboard();
+  } else {
+    document.getElementById('err').textContent = "Mot de passe incorrect";
+  }
+}
+
+document.getElementById('login-btn').addEventListener('click', tryLogin);
+document.getElementById('pwd').addEventListener('keyup', function(e) {
+  if (e.key === 'Enter') tryLogin();
+});
+
+if (localStorage.getItem(STORAGE_KEY) === "ok") {
+  showDashboard();
+}
+</script>
+</body>
+</html>
