@@ -3,255 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stats Agent IA, The Artist Academy</title>
+<title>AIDEO, Stats Agents IA</title>
 <style>
   body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #fafaf7; color: #1f262a; }
-  header { background: #1f262a; padding: 14px 24px; display: flex; align-items: center; gap: 10px; }
-  header .logo { width: 28px; height: 28px; border-radius: 6px; background: #fc8902; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 14px; }
-  header .brand { color: white; font-weight: 500; font-size: 15px; }
-  header .client-name { margin-left: auto; color: #9a9a95; font-size: 13px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
-  h1 { font-size: 22px; font-weight: 500; margin: 0 0 8px 0; }
-  .subtitle { font-size: 14px; color: #5f5e5a; line-height: 1.6; margin: 0 0 8px 0; max-width: 780px; }
-  .last-updated { font-size: 12px; color: #9a9a95; margin: 0 0 24px 0; }
-  .card { background: white; border: 1px solid #e5e4dd; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
-  .card h3 { font-size: 15px; font-weight: 500; margin: 0 0 4px 0; }
-  .card .desc { font-size: 12px; color: #888780; margin: 0 0 8px 0; }
-  .legend { display: flex; gap: 18px; margin-bottom: 12px; font-size: 12px; }
-  .legend span { display: flex; align-items: center; gap: 6px; }
-  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
-  .chart-wrap { position: relative; width: 100%; height: 280px; }
-  .chart-wrap-small { position: relative; width: 100%; height: 220px; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
-  .footer { font-size: 11px; color: #9a9a95; text-align: center; padding: 20px 0; }
-
-  .login-overlay { position: fixed; inset: 0; background: #1f262a; display: flex; align-items: center; justify-content: center; z-index: 9999; }
-  .login-box { background: white; border-radius: 12px; padding: 40px; width: 100%; max-width: 380px; margin: 0 16px; }
-  .login-logo { width: 48px; height: 48px; border-radius: 10px; background: #fc8902; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 22px; margin: 0 auto 16px; }
-  .login-title { text-align: center; font-size: 18px; font-weight: 500; margin: 0 0 4px; }
-  .login-subtitle { text-align: center; font-size: 13px; color: #888780; margin: 0 0 24px; }
-  .login-label { display: block; font-size: 13px; color: #5f5e5a; margin-bottom: 6px; }
-  .login-input { width: 100%; padding: 10px 12px; border: 1px solid #e5e4dd; border-radius: 8px; font-size: 14px; box-sizing: border-box; font-family: inherit; }
-  .login-input:focus { outline: none; border-color: #fc8902; }
-  .login-btn { width: 100%; padding: 11px; background: #1f262a; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 16px; font-family: inherit; }
-  .login-btn:hover { background: #000; }
-  .login-error { color: #c8372d; font-size: 12px; margin-top: 10px; min-height: 16px; text-align: center; }
-  .login-footer { text-align: center; font-size: 11px; color: #9a9a95; margin-top: 20px; }
-  .hidden { display: none !important; }
+  header { background: #1f262a; padding: 16px 32px; display: flex; align-items: center; gap: 12px; }
+  header .logo { width: 32px; height: 32px; border-radius: 6px; background: #fc8902; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 16px; }
+  header .brand { color: white; font-weight: 500; font-size: 16px; }
+  main { max-width: 900px; margin: 0 auto; padding: 48px 32px; }
+  h1 { font-size: 28px; font-weight: 500; margin: 0 0 12px 0; }
+  .subtitle { font-size: 15px; color: #5f5e5a; margin: 0 0 40px 0; line-height: 1.6; }
+  .clients { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .client-card { background: white; border: 1px solid #e5e4dd; border-radius: 12px; padding: 24px; text-decoration: none; color: inherit; transition: border-color 0.2s; display: block; }
+  .client-card:hover { border-color: #fc8902; }
+  .client-card h2 { font-size: 18px; font-weight: 500; margin: 0 0 8px 0; }
+  .client-card p { font-size: 13px; color: #888780; margin: 0; }
+  .footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid #e5e4dd; font-size: 12px; color: #9a9a95; text-align: center; }
 </style>
 </head>
 <body>
-
-<div id="login" class="login-overlay">
-  <div class="login-box">
-    <div class="login-logo">A</div>
-    <p class="login-title">AIDEO, Stats Agents IA</p>
-    <p class="login-subtitle">The Artist Academy</p>
-    <label class="login-label" for="pwd">Mot de passe</label>
-    <input type="password" id="pwd" class="login-input" autocomplete="current-password" />
-    <button class="login-btn" onclick="tryLogin()">Accéder au tableau de bord</button>
-    <p id="err" class="login-error"></p>
-    <p class="login-footer">Accès réservé, mot de passe fourni par AIDEO</p>
-  </div>
-</div>
-
-<div id="dashboard" class="hidden">
 <header>
   <div class="logo">A</div>
-  <div class="brand">AIDEO, Stats Agent IA</div>
-  <div class="client-name">The Artist Academy</div>
+  <div class="brand">AIDEO, Stats Agents IA</div>
 </header>
 <main>
-  <h1>Statistiques Agent IA, The Artist Academy</h1>
-  <p class="subtitle">Visualisez les statistiques mensuelles clés, interactions, utilisateurs uniques, messages d'utilisateurs et coûts totaux, comparés entre 2025 et 2026.</p>
-  <p class="last-updated" id="last-updated">Chargement...</p>
-
-  <div class="card">
-    <h3>Interactions par mois (2025 vs 2026)</h3>
-    <p class="desc">Somme des interactions totales par mois, comparant 2025 à 2026</p>
-    <div class="legend">
-      <span><span class="legend-dot" style="background: #26c2b7;"></span>2025</span>
-      <span><span class="legend-dot" style="background: #fc8902;"></span>2026</span>
-    </div>
-    <div class="chart-wrap"><canvas id="chart_interactions" role="img" aria-label="Interactions par mois"></canvas></div>
+  <h1>Tableaux de bord clients</h1>
+  <p class="subtitle">Suivi mensuel des agents IA en production. Données mises à jour automatiquement le 1er de chaque mois.</p>
+  <div class="clients">
+    <a href="/clients/the-artist-academy/" class="client-card">
+      <h2>The Artist Academy</h2>
+      <p>Agent IA conversationnel, déployé en production</p>
+    </a>
   </div>
-
-  <div class="card">
-    <h3>Utilisateurs uniques par mois (2025 vs 2026)</h3>
-    <p class="desc">Nombre d'utilisateurs distincts par mois</p>
-    <div class="legend">
-      <span><span class="legend-dot" style="background: #26c2b7;"></span>2025</span>
-      <span><span class="legend-dot" style="background: #fc8902;"></span>2026</span>
-    </div>
-    <div class="chart-wrap"><canvas id="chart_users" role="img" aria-label="Utilisateurs uniques par mois"></canvas></div>
-  </div>
-
-  <div class="card">
-    <h3>Messages utilisateurs par mois (2025 vs 2026)</h3>
-    <p class="desc">Somme des messages utilisateurs par mois</p>
-    <div class="legend">
-      <span><span class="legend-dot" style="background: #26c2b7;"></span>2025</span>
-      <span><span class="legend-dot" style="background: #fc8902;"></span>2026</span>
-    </div>
-    <div class="chart-wrap"><canvas id="chart_messages" role="img" aria-label="Messages par mois"></canvas></div>
-  </div>
-
-  <div class="card">
-    <h3>Coût total par mois (2025 vs 2026)</h3>
-    <p class="desc">Somme du coût total en dollars par mois</p>
-    <div class="legend">
-      <span><span class="legend-dot" style="background: #26c2b7;"></span>2025</span>
-      <span><span class="legend-dot" style="background: #fc8902;"></span>2026</span>
-    </div>
-    <div class="chart-wrap"><canvas id="chart_cost" role="img" aria-label="Coût par mois"></canvas></div>
-  </div>
-
-  <div class="grid-2">
-    <div class="card">
-      <h3>Total interactions par année</h3>
-      <p class="desc">Somme totale des interactions par année</p>
-      <div class="chart-wrap-small"><canvas id="chart_year_interactions" role="img" aria-label="Total interactions par année"></canvas></div>
-    </div>
-    <div class="card">
-      <h3>Total annuel des utilisateurs uniques</h3>
-      <p class="desc">Nombre total d'utilisateurs par année</p>
-      <div class="chart-wrap-small"><canvas id="chart_year_users" role="img" aria-label="Total users par année"></canvas></div>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="card">
-      <h3>Total messages utilisateurs par année</h3>
-      <p class="desc">Nombre total de messages par année</p>
-      <div class="chart-wrap-small"><canvas id="chart_year_messages" role="img" aria-label="Total messages par année"></canvas></div>
-    </div>
-    <div class="card">
-      <h3>Coût total par année</h3>
-      <p class="desc">Somme du coût total en dollars par année</p>
-      <div class="chart-wrap-small"><canvas id="chart_year_cost" role="img" aria-label="Coût par année"></canvas></div>
-    </div>
-  </div>
-
-  <div class="footer">AIDEO, données mises à jour via n8n, API Voiceflow</div>
+  <div class="footer">AIDEO, f.ruault@ai-deo.fr, www.ai-deo.fr</div>
 </main>
-</div>
-
-<script>
-const PASSWORD = "TAA-aid3o-2026!xR7";
-const STORAGE_KEY = "aideo_taa_auth";
-
-function tryLogin() {
-  const pwd = document.getElementById('pwd').value;
-  if (pwd === PASSWORD) {
-    localStorage.setItem(STORAGE_KEY, "ok");
-    showDashboard();
-  } else {
-    document.getElementById('err').textContent = "Mot de passe incorrect";
-  }
-}
-
-function showDashboard() {
-  document.getElementById('login').classList.add('hidden');
-  document.getElementById('dashboard').classList.remove('hidden');
-  loadDashboard();
-}
-
-document.getElementById('pwd').addEventListener('keyup', function(e) {
-  if (e.key === 'Enter') tryLogin();
-});
-
-if (localStorage.getItem(STORAGE_KEY) === "ok") {
-  showDashboard();
-}
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script>
-async function loadDashboard() {
-  const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
-  const ORANGE = '#fc8902';
-  const TURQUOISE = '#26c2b7';
-  const DARK = '#1f262a';
-
-  let data;
-  try {
-    const res = await fetch('/data/the-artist-academy.json?_=' + Date.now());
-    data = await res.json();
-  } catch (e) {
-    document.getElementById('last-updated').textContent = 'Erreur de chargement des données';
-    return;
-  }
-
-  const lastDate = new Date(data.last_updated);
-  document.getElementById('last-updated').textContent = 'Dernière mise à jour, ' + lastDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-
-  const d2025 = data.monthly['2025'];
-  const d2026 = data.monthly['2026'];
-  const sum = (arr) => arr.reduce((a,b) => a+b, 0);
-
-  const baseOpts = (yLabel, isMoney) => ({
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { backgroundColor: DARK, padding: 10, cornerRadius: 6 } },
-    scales: {
-      x: { ticks: { autoSkip: false, font: {size:11}, color:'#888780' }, grid: {display:false}, border:{color:'#e5e4dd'} },
-      y: {
-        beginAtZero: true,
-        title: { display: true, text: yLabel, font:{size:11}, color:'#888780' },
-        ticks: { font:{size:11}, color:'#888780', callback: (v) => isMoney ? '$' + v.toFixed(2) : v },
-        grid: { color: '#f0efe8' },
-        border: { display: false }
-      }
-    }
-  });
-
-  function barChart(id, arr2025, arr2026, yLabel, isMoney) {
-    new Chart(document.getElementById(id), {
-      type: 'bar',
-      data: {
-        labels: MONTHS,
-        datasets: [
-          { label: '2025', data: arr2025, backgroundColor: TURQUOISE, borderRadius: 2, barPercentage: 0.8, categoryPercentage: 0.7 },
-          { label: '2026', data: arr2026, backgroundColor: ORANGE, borderRadius: 2, barPercentage: 0.8, categoryPercentage: 0.7 }
-        ]
-      },
-      options: baseOpts(yLabel, isMoney)
-    });
-  }
-
-  function yearChart(id, v2025, v2026, yLabel, isMoney) {
-    new Chart(document.getElementById(id), {
-      type: 'bar',
-      data: {
-        labels: ['2025', '2026'],
-        datasets: [{ data: [v2025, v2026], backgroundColor: [TURQUOISE, ORANGE], borderRadius: 2, barPercentage: 0.5 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: {display:false}, tooltip: { backgroundColor: DARK, padding: 10, cornerRadius: 6 } },
-        scales: {
-          x: { ticks:{font:{size:12}, color:'#5f5e5a'}, grid:{display:false}, border:{color:'#e5e4dd'} },
-          y: {
-            beginAtZero: true,
-            title: {display:true, text: yLabel, font:{size:11}, color:'#888780'},
-            ticks: { font:{size:11}, color:'#888780', callback: (v) => isMoney ? '$' + v.toFixed(2) : v },
-            grid: {color:'#f0efe8'}, border:{display:false}
-          }
-        }
-      }
-    });
-  }
-
-  barChart('chart_interactions', d2025.interactions, d2026.interactions, 'Total interactions', false);
-  barChart('chart_users', d2025.unique_users, d2026.unique_users, 'Utilisateurs uniques', false);
-  barChart('chart_messages', d2025.messages, d2026.messages, 'Total messages', false);
-  barChart('chart_cost', d2025.cost_usd, d2026.cost_usd, 'Coût total ($)', true);
-
-  yearChart('chart_year_interactions', sum(d2025.interactions), sum(d2026.interactions), 'Total interactions', false);
-  yearChart('chart_year_users', sum(d2025.unique_users), sum(d2026.unique_users), 'Utilisateurs uniques', false);
-  yearChart('chart_year_messages', sum(d2025.messages), sum(d2026.messages), 'Total messages', false);
-  yearChart('chart_year_cost', Math.round(sum(d2025.cost_usd)*100)/100, Math.round(sum(d2026.cost_usd)*100)/100, 'Coût total ($)', true);
-}
-</script>
 </body>
 </html>
