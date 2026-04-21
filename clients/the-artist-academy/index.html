@@ -50,7 +50,7 @@
     <p class="login-subtitle">The Artist Academy</p>
     <label class="login-label" for="pwd">Mot de passe</label>
     <input type="password" id="pwd" class="login-input" autocomplete="current-password" />
-    <button class="login-btn" onclick="tryLogin()">Accéder au tableau de bord</button>
+    <button id="login-btn" class="login-btn">Accéder au tableau de bord</button>
     <p id="err" class="login-error"></p>
     <p class="login-footer">Accès réservé, mot de passe fourni par AIDEO</p>
   </div>
@@ -74,7 +74,7 @@
       <span><span class="legend-dot" style="background: #26c2b7;"></span>2025</span>
       <span><span class="legend-dot" style="background: #fc8902;"></span>2026</span>
     </div>
-    <div class="chart-wrap"><canvas id="chart_interactions" role="img" aria-label="Interactions par mois"></canvas></div>
+    <div class="chart-wrap"><canvas id="chart_interactions"></canvas></div>
   </div>
 
   <div class="card">
@@ -84,7 +84,7 @@
       <span><span class="legend-dot" style="background: #26c2b7;"></span>2025</span>
       <span><span class="legend-dot" style="background: #fc8902;"></span>2026</span>
     </div>
-    <div class="chart-wrap"><canvas id="chart_users" role="img" aria-label="Utilisateurs uniques par mois"></canvas></div>
+    <div class="chart-wrap"><canvas id="chart_users"></canvas></div>
   </div>
 
   <div class="card">
@@ -94,7 +94,7 @@
       <span><span class="legend-dot" style="background: #26c2b7;"></span>2025</span>
       <span><span class="legend-dot" style="background: #fc8902;"></span>2026</span>
     </div>
-    <div class="chart-wrap"><canvas id="chart_messages" role="img" aria-label="Messages par mois"></canvas></div>
+    <div class="chart-wrap"><canvas id="chart_messages"></canvas></div>
   </div>
 
   <div class="card">
@@ -104,19 +104,19 @@
       <span><span class="legend-dot" style="background: #26c2b7;"></span>2025</span>
       <span><span class="legend-dot" style="background: #fc8902;"></span>2026</span>
     </div>
-    <div class="chart-wrap"><canvas id="chart_cost" role="img" aria-label="Coût par mois"></canvas></div>
+    <div class="chart-wrap"><canvas id="chart_cost"></canvas></div>
   </div>
 
   <div class="grid-2">
     <div class="card">
       <h3>Total interactions par année</h3>
       <p class="desc">Somme totale des interactions par année</p>
-      <div class="chart-wrap-small"><canvas id="chart_year_interactions" role="img" aria-label="Total interactions par année"></canvas></div>
+      <div class="chart-wrap-small"><canvas id="chart_year_interactions"></canvas></div>
     </div>
     <div class="card">
       <h3>Total annuel des utilisateurs uniques</h3>
       <p class="desc">Nombre total d'utilisateurs par année</p>
-      <div class="chart-wrap-small"><canvas id="chart_year_users" role="img" aria-label="Total users par année"></canvas></div>
+      <div class="chart-wrap-small"><canvas id="chart_year_users"></canvas></div>
     </div>
   </div>
 
@@ -124,12 +124,12 @@
     <div class="card">
       <h3>Total messages utilisateurs par année</h3>
       <p class="desc">Nombre total de messages par année</p>
-      <div class="chart-wrap-small"><canvas id="chart_year_messages" role="img" aria-label="Total messages par année"></canvas></div>
+      <div class="chart-wrap-small"><canvas id="chart_year_messages"></canvas></div>
     </div>
     <div class="card">
       <h3>Coût total par année</h3>
       <p class="desc">Somme du coût total en dollars par année</p>
-      <div class="chart-wrap-small"><canvas id="chart_year_cost" role="img" aria-label="Coût par année"></canvas></div>
+      <div class="chart-wrap-small"><canvas id="chart_year_cost"></canvas></div>
     </div>
   </div>
 
@@ -137,37 +137,11 @@
 </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 const PASSWORD = "TAA-aid3o-2026!xR7";
 const STORAGE_KEY = "aideo_taa_auth";
 
-function tryLogin() {
-  const pwd = document.getElementById('pwd').value;
-  if (pwd === PASSWORD) {
-    localStorage.setItem(STORAGE_KEY, "ok");
-    showDashboard();
-  } else {
-    document.getElementById('err').textContent = "Mot de passe incorrect";
-  }
-}
-
-function showDashboard() {
-  document.getElementById('login').classList.add('hidden');
-  document.getElementById('dashboard').classList.remove('hidden');
-  loadDashboard();
-}
-
-document.getElementById('pwd').addEventListener('keyup', function(e) {
-  if (e.key === 'Enter') tryLogin();
-});
-
-if (localStorage.getItem(STORAGE_KEY) === "ok") {
-  showDashboard();
-}
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script>
 async function loadDashboard() {
   const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
   const ORANGE = '#fc8902';
@@ -180,6 +154,7 @@ async function loadDashboard() {
     data = await res.json();
   } catch (e) {
     document.getElementById('last-updated').textContent = 'Erreur de chargement des données';
+    console.error('Fetch error:', e);
     return;
   }
 
@@ -212,46 +187,4 @@ async function loadDashboard() {
         labels: MONTHS,
         datasets: [
           { label: '2025', data: arr2025, backgroundColor: TURQUOISE, borderRadius: 2, barPercentage: 0.8, categoryPercentage: 0.7 },
-          { label: '2026', data: arr2026, backgroundColor: ORANGE, borderRadius: 2, barPercentage: 0.8, categoryPercentage: 0.7 }
-        ]
-      },
-      options: baseOpts(yLabel, isMoney)
-    });
-  }
-
-  function yearChart(id, v2025, v2026, yLabel, isMoney) {
-    new Chart(document.getElementById(id), {
-      type: 'bar',
-      data: {
-        labels: ['2025', '2026'],
-        datasets: [{ data: [v2025, v2026], backgroundColor: [TURQUOISE, ORANGE], borderRadius: 2, barPercentage: 0.5 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: {display:false}, tooltip: { backgroundColor: DARK, padding: 10, cornerRadius: 6 } },
-        scales: {
-          x: { ticks:{font:{size:12}, color:'#5f5e5a'}, grid:{display:false}, border:{color:'#e5e4dd'} },
-          y: {
-            beginAtZero: true,
-            title: {display:true, text: yLabel, font:{size:11}, color:'#888780'},
-            ticks: { font:{size:11}, color:'#888780', callback: (v) => isMoney ? '$' + v.toFixed(2) : v },
-            grid: {color:'#f0efe8'}, border:{display:false}
-          }
-        }
-      }
-    });
-  }
-
-  barChart('chart_interactions', d2025.interactions, d2026.interactions, 'Total interactions', false);
-  barChart('chart_users', d2025.unique_users, d2026.unique_users, 'Utilisateurs uniques', false);
-  barChart('chart_messages', d2025.messages, d2026.messages, 'Total messages', false);
-  barChart('chart_cost', d2025.cost_usd, d2026.cost_usd, 'Coût total ($)', true);
-
-  yearChart('chart_year_interactions', sum(d2025.interactions), sum(d2026.interactions), 'Total interactions', false);
-  yearChart('chart_year_users', sum(d2025.unique_users), sum(d2026.unique_users), 'Utilisateurs uniques', false);
-  yearChart('chart_year_messages', sum(d2025.messages), sum(d2026.messages), 'Total messages', false);
-  yearChart('chart_year_cost', Math.round(sum(d2025.cost_usd)*100)/100, Math.round(sum(d2026.cost_usd)*100)/100, 'Coût total ($)', true);
-}
-</script>
-</body>
-</html>
+          { label: '2026', data: arr2026, backgroundCol
