@@ -176,7 +176,7 @@ async function loadDashboard() {
 
   let data;
   try {
-    const res = await fetch('/data/the-artist-academy.json?_=' + Date.now());
+    const res = await fetch('../../data/the-artist-academy.json?_=' + Date.now());
     data = await res.json();
   } catch (e) {
     document.getElementById('last-updated').textContent = 'Erreur de chargement des données';
