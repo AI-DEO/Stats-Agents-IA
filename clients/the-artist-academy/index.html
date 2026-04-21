@@ -138,6 +138,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <script>
 const PASSWORD = "TAA-aid3o-2026!xR7";
 const STORAGE_KEY = "aideo_taa_auth";
@@ -147,6 +148,8 @@ async function loadDashboard() {
   const ORANGE = '#fc8902';
   const TURQUOISE = '#26c2b7';
   const DARK = '#1f262a';
+
+  Chart.register(ChartDataLabels);
 
   let data;
   try {
@@ -167,7 +170,22 @@ async function loadDashboard() {
 
   const baseOpts = (yLabel, isMoney) => ({
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { backgroundColor: DARK, padding: 10, cornerRadius: 6 } },
+    layout: { padding: { top: 24 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { backgroundColor: DARK, padding: 10, cornerRadius: 6 },
+      datalabels: {
+        anchor: 'end',
+        align: 'top',
+        offset: 2,
+        color: '#5f5e5a',
+        font: { size: 10, weight: '500' },
+        formatter: (value) => {
+          if (value === 0 || value === null || value === undefined) return '';
+          return isMoney ? '$' + value.toFixed(2) : value;
+        }
+      }
+    },
     scales: {
       x: { ticks: { autoSkip: false, font: {size:11}, color:'#888780' }, grid: {display:false}, border:{color:'#e5e4dd'} },
       y: {
@@ -203,7 +221,22 @@ async function loadDashboard() {
       },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: {display:false}, tooltip: { backgroundColor: DARK, padding: 10, cornerRadius: 6 } },
+        layout: { padding: { top: 24 } },
+        plugins: {
+          legend: {display:false},
+          tooltip: { backgroundColor: DARK, padding: 10, cornerRadius: 6 },
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            offset: 2,
+            color: '#5f5e5a',
+            font: { size: 11, weight: '500' },
+            formatter: (value) => {
+              if (value === 0 || value === null || value === undefined) return '';
+              return isMoney ? '$' + value.toFixed(2) : value;
+            }
+          }
+        },
         scales: {
           x: { ticks:{font:{size:12}, color:'#5f5e5a'}, grid:{display:false}, border:{color:'#e5e4dd'} },
           y: {
