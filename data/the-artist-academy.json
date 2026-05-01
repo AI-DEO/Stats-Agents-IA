@@ -1,7 +1,7 @@
 {
   "client": "The Artist Academy",
   "projectID": "67e5a6f5eb462a0ca37586d2",
-  "last_updated": "2026-04-21T20:04:30.066Z",
+  "last_updated": "2026-05-01T04:00:06.048Z",
   "monthly": {
     "2025": {
       "interactions": [
@@ -65,7 +65,7 @@
       "interactions": [
         287,
         212,
-        212,
+        160,
         0,
         0,
         0,
@@ -79,7 +79,7 @@
       "unique_users": [
         85,
         62,
-        62,
+        44,
         0,
         0,
         0,
@@ -93,7 +93,7 @@
       "messages": [
         102,
         91,
-        91,
+        64,
         0,
         0,
         0,
@@ -107,7 +107,7 @@
       "cost_usd": [
         1.28,
         1.16,
-        1.15,
+        0.83,
         0,
         0,
         0,
